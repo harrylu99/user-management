@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Col, Row, Divider, Button, Tooltip, Popover, Menu, Modal, message, Popconfirm } from 'antd'
-import { QuestionOutlined, SearchOutlined, MoreOutlined, CloseOutlined, ExclamationOutlined } from '@ant-design/icons'
+import { QuestionOutlined, SearchOutlined, MoreOutlined, CloseOutlined } from '@ant-design/icons'
 import axiosHelper from '../../Utilities/axiosHelper'
 
 const Users = () => {
@@ -15,7 +15,6 @@ const Users = () => {
   const [currentUserLastName, updateUserLastName] = useState('')
   const [currentUserEmail, updateUserEmail] = useState('')
   const [currentUserPermission, updateUserPermission] = useState(0)
-
   const isInputInvalid = useRef(false)
 
   const confirmDelete = () => {
@@ -33,7 +32,7 @@ const Users = () => {
     if (isInputInvalid.current) {
       return
     } else {
-      message.success(isNewUser ? 'You Have Create A New User' : 'You Have Save Edit')
+      message.success(isNewUser ? `You Have Create A New User ${currentUserFirstName}` : `You Have Save Edit Of User ${currentUserFirstName}`)
       resetInput()
       setIsModalVisible(false)
     }
@@ -41,7 +40,7 @@ const Users = () => {
 
   // check if input is invalid
   const checkInput = () => {
-    if (!currentUserFirstName || !currentUserLastName || !currentUserEmail || !isValidEmail) {
+    if (!currentUserFirstName || !currentUserLastName || currentUserPermission === 0 || !currentUserEmail || !isValidEmail) {
       isInputInvalid.current = true
       setDisplayInputWarning(true)
     } else {
@@ -64,6 +63,12 @@ const Users = () => {
     } else {
       document.getElementById('last-name-input').style.borderColor = '#344148'
     }
+    // if permission group not group 0
+    if (currentUserPermission === 0) {
+      document.getElementById('permission-select').style.borderColor = 'orange'
+    } else {
+      document.getElementById('permission-select').style.borderColor = '#344148'
+    }
     // if email input is valid
     if (currentUserEmail === '' || !isValidEmail) {
       document.getElementById('email-input').style.borderColor = 'orange'
@@ -81,20 +86,23 @@ const Users = () => {
     isInputInvalid.current = false
   }
 
+  // reset the input/select
   const resetInput = () => {
     updateUserFirstName('')
     updateUserLastName('')
-    updateUserEmail('')
     updateUserPermission(0)
+    updateUserEmail('')
   }
 
+  // reset the border color of each input/select
   const resetInputWarning = () => {
     document.getElementById('first-name-input').style.borderColor = '#344148'
     document.getElementById('last-name-input').style.borderColor = '#344148'
+    document.getElementById('permission-select').style.borderColor = '#344148'
     document.getElementById('email-input').style.borderColor = '#344148'
   }
 
-  // Click the more button, show the menu list
+  // click the more button, show the menu list
   const content = (
     <Menu
       items={[
@@ -139,6 +147,7 @@ const Users = () => {
     />
   )
 
+  // the footer of the user edit modal
   const modalFooter = (
     <Row className='modal-footer'>
       <Col span={10}>{displayInputWarning ? <div className='warning-text'> Please fill out the required input!</div> : ''}</Col>
@@ -153,6 +162,7 @@ const Users = () => {
     </Row>
   )
 
+  // search by keyword function
   const searchByKeyword = () => {
     const keyword = document.getElementById('search-input').value
     setSearchKeyword(keyword)
@@ -266,7 +276,10 @@ const Users = () => {
           <p>Last Name</p>
           <input id='last-name-input' type='text' placeholder='Enter Last Name' value={currentUserLastName} onChange={(e) => updateUserLastName(e.target.value)}></input>
           <p>Permission Group</p>
-          <select name='permission' id='permission' value={currentUserPermission} onChange={(e) => updateUserPermission(e.target.value)}>
+          <select id='permission-select' value={currentUserPermission} onChange={(e) => updateUserPermission(e.target.value)}>
+            <option value='0' disabled>
+              --- Select One ---
+            </option>
             <option value='1'>Permission Group One</option>
             <option value='2'>Permission Group Two</option>
             <option value='3'>Permission Group Three</option>
