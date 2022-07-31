@@ -1,17 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import { Col, Row, Divider, Button, Tooltip, Popover, Menu, Modal, message, Popconfirm } from 'antd'
-import { QuestionOutlined, SearchOutlined, MoreOutlined, CloseOutlined } from '@ant-design/icons'
+import { QuestionOutlined, SearchOutlined, MoreOutlined, CloseOutlined, ExclamationOutlined } from '@ant-design/icons'
 import axiosHelper from '../../Utilities/axiosHelper'
 
 const Users = () => {
   const [users, getUsers] = useState([])
   const [displayUsers, setDisplayUsers] = useState([])
+  const [displayInputWarning, setDisplayInputWarning] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isNewUser, setIsNewUser] = useState(false)
+  const [isValidEmail, setIsValidEmail] = useState(false)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [currentUserFirstName, updateUserFirstName] = useState('')
   const [currentUserLastName, updateUserLastName] = useState('')
   const [currentUserEmail, updateUserEmail] = useState('')
+  const [currentUserPermission, updateUserPermission] = useState(0)
 
   const isInputInvalid = useRef(false)
 
@@ -38,29 +41,31 @@ const Users = () => {
 
   // check if input is invalid
   const checkInput = () => {
-    if (!currentUserFirstName || !currentUserLastName || !currentUserEmail) {
+    if (!currentUserFirstName || !currentUserLastName || !currentUserEmail || !isValidEmail) {
       isInputInvalid.current = true
+      setDisplayInputWarning(true)
     } else {
       isInputInvalid.current = false
+      setDisplayInputWarning(false)
     }
   }
 
   // update input warning
   const updateInputWarning = () => {
     // if first name input is valid
-    if (!currentUserFirstName) {
+    if (currentUserFirstName === '') {
       document.getElementById('first-name-input').style.borderColor = 'orange'
     } else {
       document.getElementById('first-name-input').style.borderColor = '#344148'
     }
     // if last name input is valid
-    if (!currentUserLastName) {
+    if (currentUserLastName === '') {
       document.getElementById('last-name-input').style.borderColor = 'orange'
     } else {
       document.getElementById('last-name-input').style.borderColor = '#344148'
     }
     // if email input is valid
-    if (!currentUserEmail) {
+    if (currentUserEmail === '' || !isValidEmail) {
       document.getElementById('email-input').style.borderColor = 'orange'
     } else {
       document.getElementById('email-input').style.borderColor = '#344148'
@@ -72,6 +77,7 @@ const Users = () => {
     resetInput()
     resetInputWarning()
     setIsModalVisible(false)
+    setDisplayInputWarning(false)
     isInputInvalid.current = false
   }
 
@@ -79,6 +85,7 @@ const Users = () => {
     updateUserFirstName('')
     updateUserLastName('')
     updateUserEmail('')
+    updateUserPermission(0)
   }
 
   const resetInputWarning = () => {
@@ -134,9 +141,7 @@ const Users = () => {
 
   const modalFooter = (
     <Row className='modal-footer'>
-      <Col span={10}>
-        <div className='warning-text'>{isInputInvalid.current === true ? 'Please fill out the required input!' : ''}</div>
-      </Col>
+      <Col span={10}>{displayInputWarning ? <div className='warning-text'> Please fill out the required input!</div> : ''}</Col>
       <Col span={14}>
         <Button className='cancel-button' onClick={() => handleCancel()}>
           Cancel
@@ -162,6 +167,7 @@ const Users = () => {
     setDisplayUsers(arr)
   }
 
+  // componentDidMount
   useEffect(() => {
     async function fetchData() {
       const rep = await axiosHelper.axiosGet('https://jsonplaceholder.typicode.com/users')
@@ -174,6 +180,16 @@ const Users = () => {
     }
     fetchData()
   }, [])
+
+  // check if is a valid email
+  useEffect(() => {
+    const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+    if (reg.test(currentUserEmail)) {
+      setIsValidEmail(true)
+    } else {
+      setIsValidEmail(false)
+    }
+  }, [currentUserEmail])
 
   return (
     <div className='users-page'>
@@ -190,9 +206,7 @@ const Users = () => {
             onClick={() => {
               setIsModalVisible(true)
               setIsNewUser(true)
-              updateUserFirstName('')
-              updateUserLastName('')
-              updateUserEmail('')
+              resetInput()
             }}
             style={{ backgroundColor: '#01A341', borderColor: '#01A341' }}>
             Create New
@@ -234,6 +248,7 @@ const Users = () => {
                       updateUserFirstName(item.name.split(' ')[0])
                       updateUserLastName(item.name.split(' ')[1])
                       updateUserEmail(item.email)
+                      updateUserPermission(Math.round(item.id / 2))
                     }}>
                     <MoreOutlined />
                   </Button>
@@ -244,14 +259,6 @@ const Users = () => {
         </div>
       </div>
 
-      {/* {modalVisible ? (
-        <UserUpdateModal
-          currentUser={currentUser}
-          isNewUser={isNewUser}
-          getVisible={getVisibleFromModal}
-        />
-      ) : null} */}
-
       <Modal className='user-edit' title={isNewUser ? 'New User' : 'Edit User'} width={420} visible={isModalVisible} closeIcon={<CloseOutlined style={{ color: 'white' }} />} footer={modalFooter} onCancel={handleCancel}>
         <div className='list-section'>
           <p>First Name</p>
@@ -259,8 +266,17 @@ const Users = () => {
           <p>Last Name</p>
           <input id='last-name-input' type='text' placeholder='Enter Last Name' value={currentUserLastName} onChange={(e) => updateUserLastName(e.target.value)}></input>
           <p>Permission Group</p>
-          <input></input>
-          <p>Email</p>
+          <select name='permission' id='permission' value={currentUserPermission} onChange={(e) => updateUserPermission(e.target.value)}>
+            <option value='1'>Permission Group One</option>
+            <option value='2'>Permission Group Two</option>
+            <option value='3'>Permission Group Three</option>
+            <option value='4'>Permission Group Four</option>
+            <option value='5'>Permission Group Five</option>
+          </select>
+          <p>
+            Email
+            {isValidEmail ? '' : <span style={{ color: 'orange', fontSize: '12px' }}> Note: Must Be A Valid Email !</span>}
+          </p>
           <input id='email-input' type='email' placeholder='Enter Email Address' value={currentUserEmail} onChange={(e) => updateUserEmail(e.target.value)}></input>
         </div>
       </Modal>
