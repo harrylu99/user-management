@@ -193,7 +193,7 @@ const Users = () => {
 
   // check if is a valid email
   useEffect(() => {
-    const reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+    const reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
     if (reg.test(currentUserEmail)) {
       setIsValidEmail(true)
     } else {
