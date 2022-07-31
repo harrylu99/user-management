@@ -1,0 +1,256 @@
+@import '~antd/dist/antd.css';
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* change some antd style */
+.ant-menu,
+.ant-menu-sub,
+.ant-menu-inline {
+  color: white;
+  background-color: #15202a !important;
+}
+
+.ant-menu-item-selected {
+  color: white !important;
+  background-color: #0c161e !important;
+}
+
+/* HOC/Layout/Sider */
+.sider {
+  height: 100vh;
+  background-color: #15202a;
+  border-right: 1px solid #242c36;
+}
+
+.sider .logo {
+  height: 30px;
+  margin: 18px;
+  font-size: 18px;
+  color: white;
+  text-align: center;
+}
+
+.menu-footer {
+  position: absolute;
+  bottom: 10px;
+  height: 70px;
+  width: 100%;
+  padding-top: 15px;
+  border-top: 1px solid #242c36;
+  text-align: center;
+}
+
+.menu-footer .user-avatar {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.menu-footer .user-info {
+  padding-left: 15px;
+  color: white;
+  text-align: left;
+}
+
+.menu-footer .user-info .user-company {
+  font-size: 14px;
+}
+
+.menu-footer .user-info .user-name {
+  padding-top: 2px;
+  font-size: 12px;
+}
+
+.menu-footer .collapsed-button {
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+/* HOC/Layout/Header */
+
+.header {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.header .company-avatar .company-logo {
+  margin-right: 15px;
+}
+
+.header .company-name {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.header .user-info {
+  text-align: right;
+}
+
+.header .user-info .user-name {
+  margin-left: 10px;
+}
+
+/* Components/Users */
+
+.users-page {
+  color: white;
+  margin-top: 15px;
+}
+
+.users-page .page-title {
+  font-size: 20px;
+}
+
+.users-page .create-new-button {
+  text-align: right;
+}
+
+.users-page .divider-line {
+  background-color: #242c36;
+}
+
+.search-container {
+  background-color: #202c36;
+  border: 1px solid #242c36;
+  border-radius: 10px;
+}
+
+.search-container .search-icon {
+  padding-left: 10px;
+}
+
+.search-container input {
+  background-color: #202c36;
+  width: 80%;
+  margin-left: 10px;
+  border: 0;
+}
+
+.search-container input:focus {
+  outline: 0;
+}
+
+.user-list {
+  padding-top: 20px;
+  /* padding-left: 10px; */
+}
+
+.user-list .list-title {
+  padding: 0 20px;
+}
+
+.user-list .user-item {
+  padding: 15px 20px;
+  margin: 8px 0;
+  border-radius: 10px;
+  background-color: #2d3742;
+}
+
+.user-list .user-item .more-button {
+  border-color: transparent;
+  position: absolute;
+  right: 0;
+}
+
+.user-edit {
+  color: white;
+}
+
+.user-edit .ant-modal-header,
+.ant-modal-body {
+  background-color: #273039;
+  border: 0;
+}
+
+.user-edit .ant-modal-title {
+  color: white;
+}
+
+.user-edit .ant-modal-footer {
+  background-color: #3a4856;
+  border: 0;
+}
+
+.user-edit .list-section {
+  border-top: 1px solid #344148;
+}
+
+.user-edit p {
+  margin-top: 8px;
+}
+
+.user-edit input {
+  background-color: #202c36;
+  width: 100%;
+  padding: 5px 5px;
+  border: 1px solid #344148;
+  border-radius: 5px;
+}
+.user-edit .modal-footer{
+  padding: 0 10px;
+}
+
+.user-edit .warning-text {
+  text-align: left;
+  color: orange;
+}
+
+.user-edit .cancel-button {
+  color: white;
+  background-color: transparent;
+}
+
+.user-edit .ok-button {
+  color: black;
+  background-color: white;
+  border: 1px white solid;
+}
